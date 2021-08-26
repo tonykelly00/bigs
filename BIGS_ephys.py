@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 #import the dll from neuron
 #neuron.load_mechanisms(D:/Bonn/other/BIGS_Summer_School/2019/model/mod)
-#h.nrn_load_dll(":\\Bonn\\other\\BIGS_Summer_School\\2019\\model\\mod\\nrnmech.dll")   # this way of loading dll from daniel works
+#h.nrn_load_dll("F:\\Bonn\\other\\Teaching\\BIGS_Summer_School\\2021\\model\\mod\\nrnmech.dll")   # this way of loading dll from daniel works
 
 #dir(h) #to view what is hoc variables are accessable from python
 
@@ -28,11 +28,11 @@ def mk_soma(length, diam, leak_conductance=1/5000, v_init=-80): # makes soma; so
     soma(0.5).pas.g = leak_conductance # 0.0002  5000 ohms.cm2
     soma(0.5).e_pas = v_init
     
-    #soma.insert('myhh')
-    #dir(soma(0.5).myhh) # view the variables
-    #soma(0.5).myhh.el = v_init #in mod file set to -54.3
-    #soma.ki = 150 #mM #as default ki is 54 mM for squid axon
-   
+    
+    # soma.insert('hh')
+    # soma(0.5).hh.el = v_init #in mod file set to -54.3
+    # soma.ki = 150 #mM #as default ki is 54 mM for squid axon
+    # dir(soma(0.5).hh) # view the variables
     
     return soma
     
@@ -40,7 +40,7 @@ def mk_soma(length, diam, leak_conductance=1/5000, v_init=-80): # makes soma; so
 def attach_dend(soma, dend_length, dend_diam, leak_conductance=1/5000, v_init=-80): # attaches dendrites to soma; dend = attach_dend(soma, dend_length, dend_diameter)
     dend = h.Section()
     dend.L = dend_length
-    dend.diam = dend_diam
+    dend.diam = dend_diameter
     
     dend.Ra = 181
     dend.cm = 1
@@ -69,9 +69,9 @@ def attach_synapse(loc): # attaches excitatory synapse to compartment eg dend; s
     #plt.plot(t_vec, sy1[1]) #plots synaptic current  (nA)
     return sy, syI_vec
     
-def attach_VC(loc):  # attaches voltage-clamp electrode to compartment eg soma; vc = attach_VC(soma)
+def attach_VC(loc, rs=1):  # attaches voltage-clamp electrode to compartment eg soma; vc = attach_VC(soma)
   vc = h.SEClamp(loc(0.5))
-  vc.rs = 1
+  vc.rs = rs
   vc.dur1 = 10 #ms
   vc.amp1 = -80 # mV
   vc.dur2 = 100 #ms
@@ -106,7 +106,7 @@ def record(syN):
     
     return syN
             
-def run(soma, stepT=0.01, v_init=-80): # Runs simulation stepT determines the time resolution default 0.01 = 1/0.01 =>100pt/ms
+def run(soma, stepT=0.01, v_init=-80, end=250): # Runs simulation stepT determines the time resolution default 0.01 = 1/0.01 =>100pt/ms
     print(soma.L) 
     # Record
     v_vec = h.Vector()             # Membrane potential vector (mV)
@@ -116,14 +116,22 @@ def run(soma, stepT=0.01, v_init=-80): # Runs simulation stepT determines the ti
      
     # Simulation hyperparameters
     h.cvode.active(0)
+    h.finitialize(v_init)
+    #new block to reach SS see neuron book 8.4.2
+    h.t = -1e6
+    h.dt = 1e3
+    while h.t<-h.dt:
+        h.fadvance()
+    h.t = 0
+       
     dt = stepT
     h.steps_per_ms = 1.0/dt
-    h.finitialize(v_init)
+   
     h.secondorder = 0
     h.dt = dt
     
     h.frecord_init()  # Necessary after changing t to restart the vectors
-    while h.t < 250:
+    while h.t < end:
         h.fadvance()
     print("Done Running")
     
@@ -192,6 +200,7 @@ if __name__ == "__main__":
         for discuassion of converting specific membrane resitance (Rm)) to Rin see https://www.neuron.yale.edu/phpBB/viewtopic.php?f=8&t=2822
         Rm = Rin [*106 (scaling for  mega)] * surface area [*10-8 (scaling for um2 to cm2)] 
          = Rm / surface area [4*pie*R^2] [*10-8 (scaling for um2 to cm2)]
+         (1/soma(0.5).pas.g)/(4*3.14*10**2) * (1e2) [check 1e2 scaling]
     
     Membrane time constant 
 		cell area [h.area(0.5)=1256um^2} time 1uF/cm^2	=> 1256 (1e-8) * 1 (1e-6) = 12.56pF
