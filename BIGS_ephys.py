@@ -40,7 +40,7 @@ def mk_soma(length, diam, leak_conductance=1/5000, v_init=-80): # makes soma; so
 def attach_dend(soma, dend_length, dend_diam, leak_conductance=1/5000, v_init=-80): # attaches dendrites to soma; dend = attach_dend(soma, dend_length, dend_diameter)
     dend = h.Section()
     dend.L = dend_length
-    dend.diam = dend_diam
+    dend.diam = dend_diameter
     
     dend.Ra = 181
     dend.cm = 1
@@ -107,7 +107,7 @@ def record(syN):
     return syN
             
 def run(soma, stepT=0.01, v_init=-80, end=250): # Runs simulation stepT determines the time resolution default 0.01 = 1/0.01 =>100pt/ms
-    print(soma.L) 
+    #print(soma.L) 
     # Record
     v_vec = h.Vector()             # Membrane potential vector (mV)
     t_vec = h.Vector()             # Time stamp vector (ms)
@@ -136,10 +136,10 @@ def run(soma, stepT=0.01, v_init=-80, end=250): # Runs simulation stepT determin
     print("Done Running")
     
     #plt.figure(figsize=(8,4)) # Default figsize is (8,6)
-    plt.plot(t_vec, v_vec)
-    plt.xlabel('time (ms)')
-    plt.ylabel('mV')
-    plt.show()
+    # plt.plot(t_vec, v_vec)
+    # plt.xlabel('time (ms)')
+    # plt.ylabel('mV')
+    # plt.show()
     
 
     return t_vec, v_vec
@@ -181,8 +181,7 @@ def run_conductances(stepT=0.01, v_init=-80, conductance=0.05):
 
     return t_vec, v_vec, vc[1]
 
-    
-  
+
 if __name__ == "__main__":
     soma_length = 20  # um
     soma_diameter = 20  # um
