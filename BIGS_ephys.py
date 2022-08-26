@@ -8,6 +8,8 @@ Created on Wed Apr 24 13:37:35 2019
 from neuron import h, gui
 import matplotlib.pyplot as plt
 import numpy as np
+
+%matplotlib qt
 #import the dll from neuron
 #neuron.load_mechanisms(D:/Bonn/other/BIGS_Summer_School/2019/model/mod)
 #h.nrn_load_dll("F:\\Bonn\\other\\Teaching\\BIGS_Summer_School\\2021\\model\\mod\\nrnmech.dll")   # this way of loading dll from daniel works
