@@ -6,7 +6,6 @@ Created on Wed Apr 24 13:37:35 2019
 """
 
 from neuron import h, gui
-%matplotlib inline
 import matplotlib.pyplot as plt
 import numpy as np
 
