@@ -38,7 +38,7 @@ def mk_soma(length, diam, leak_conductance=1/5000, v_init=-80): # makes soma; so
     return soma
     
 
-def attach_dend(soma, dend_length, dend_diam, leak_conductance=1/5000, v_init=-80): # attaches dendrites to soma; dend = attach_dend(soma, dend_length, dend_diameter)
+def attach_dend(soma, dend_length, dend_diameter, leak_conductance=1/5000, v_init=-80): # attaches dendrites to soma; dend = attach_dend(soma, dend_length, dend_diameter)
     dend = h.Section()
     dend.L = dend_length
     dend.diam = dend_diameter
