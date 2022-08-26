@@ -136,11 +136,11 @@ def run(soma, stepT=0.01, v_init=-80, end=250): # Runs simulation stepT determin
         h.fadvance()
     print("Done Running")
     
-    #plt.figure(figsize=(8,4)) # Default figsize is (8,6)
-    # plt.plot(t_vec, v_vec)
-    # plt.xlabel('time (ms)')
-    # plt.ylabel('mV')
-    # plt.show()
+    plt.figure(figsize=(8,4)) # Default figsize is (8,6)
+    plt.plot(t_vec, v_vec)
+    plt.xlabel('time (ms)')
+    plt.ylabel('mV')
+    plt.show()
     
 
     return t_vec, v_vec
